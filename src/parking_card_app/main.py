@@ -12,7 +12,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 cooldown_cache = {}
 
-def get_data_hash(user_ dict):
+def get_data_hash(user_data: dict):
     data_str = f"{user_data['name']}{user_data['email']}{user_data['vehicle_reg']}"
     return hashlib.sha256(data_str.encode()).hexdigest()
 
