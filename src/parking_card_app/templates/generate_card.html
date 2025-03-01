@@ -47,6 +47,32 @@
         </div>
     </div>
 
+    <div id="previewSection" class="hidden mt-6 p-4 bg-gray-50 rounded-lg">
+        <h3 class="text-lg font-semibold mb-4">Preview Details</h3>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div><span class="font-medium">Name:</span> <span id="previewName"></span></div>
+            <div><span class="font-medium">Email:</span> <span id="previewEmail"></span></div>
+            <div><span class="font-medium">Vehicle Reg:</span> <span id="previewVehicle"></span></div>
+        </div>
+        <button 
+            id="confirmBtn" 
+            onclick="confirmGeneration()"
+            class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition"
+        >
+            Confirm and Generate Card
+        </button>
+        <button 
+            onclick="document.getElementById('previewSection').classList.add('hidden')"
+            class="ml-4 px-6 py-2 border rounded text-gray-600 hover:bg-gray-50 transition"
+        >
+            Cancel
+        </button>
+    </div>
+
+    <div id="cooldownNotice" class="hidden mt-4 text-sm text-gray-500">
+        ⏳ Card generation will be available again<span id="cooldownTimer"></span>
+    </div>
+
     <div id="error" class="mt-4 hidden">
         <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
             <p id="error_message"></p>
@@ -55,42 +81,82 @@
 </div>
 
 <script>
-    document.getElementById('cardForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            vehicle_reg: document.getElementById('vehicle_reg').value
-        };
-        
+    let formSubmissionData = null;
+    let cooldownTimeout = null;
+
+    function showSuccess(result) {
+        document.getElementById('error').classList.add('hidden');
+        document.getElementById('card_id').textContent = result.card_id;
+        document.getElementById('card_vehicle_reg').textContent = result.vehicle_reg;
+        document.getElementById('expiry').textContent = result.expiry;
+        document.getElementById('result').classList.remove('hidden');
+        document.getElementById('previewSection').classList.add('hidden');
+    }
+
+    function showError(message) {
+        document.getElementById('result').classList.add('hidden');
+        document.getElementById('error_message').textContent = message || 'An error occurred';
+        document.getElementById('error').classList.remove('hidden');
+        document.getElementById('confirmBtn').disabled = false;
+    }
+
+    async function confirmGeneration() {
         try {
+            document.getElementById('confirmBtn').disabled = true;
             const response = await fetch('/generate-card', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(formSubmissionData),
             });
             
             const result = await response.json();
             
             if (response.ok) {
-                document.getElementById('error').classList.add('hidden');
-                document.getElementById('card_id').textContent = result.card_id;
-                document.getElementById('card_vehicle_reg').textContent = result.vehicle_reg;
-                document.getElementById('expiry').textContent = result.expiry;
-                document.getElementById('result').classList.remove('hidden');
+                showSuccess(result);
+                startCooldown();
             } else {
-                document.getElementById('result').classList.add('hidden');
-                document.getElementById('error_message').textContent = result.detail || result.error || 'An error occurred';
-                document.getElementById('error').classList.remove('hidden');
+                showError(result.detail || result.error);
             }
         } catch (error) {
-            document.getElementById('result').classList.add('hidden');
-            document.getElementById('error_message').textContent = 'Network error. Please try again.';
-            document.getElementById('error').classList.remove('hidden');
+            showError('Network error. Please try again.');
         }
+    }
+
+    function startCooldown() {
+        document.getElementById('cardForm').style.opacity = '0.5';
+        document.getElementById('cardForm').querySelectorAll('input, button').forEach(el => el.disabled = true);
+        document.getElementById('cooldownNotice').classList.remove('hidden');
+        
+        let seconds = 300;
+        const cooldownInterval = setInterval(() => {
+            document.getElementById('cooldownTimer').textContent = ` (${Math.floor(seconds / 60)}m ${seconds % 60}s remaining)`;
+            if (seconds <= 0) {
+                clearInterval(cooldownInterval);
+                document.getElementById('cardForm').style.opacity = '';
+                document.getElementById('cardForm').querySelectorAll('input, button').forEach(el => el.disabled = false);
+                document.getElementById('cooldownNotice').classList.add('hidden');
+            }
+            seconds--;
+        }, 1000);
+    }
+
+    // Modify the existing submit handler to show preview instead of submitting
+    document.getElementById('cardForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        formSubmissionData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            vehicle_reg: document.getElementById('vehicle_reg').value
+        };
+        
+        // Show preview
+        document.getElementById('previewName').textContent = formSubmissionData.name;
+        document.getElementById('previewEmail').textContent = formSubmissionData.email;
+        document.getElementById('previewVehicle').textContent = formSubmissionData.vehicle_reg;
+        document.getElementById('previewSection').classList.remove('hidden');
     });
 </script>
 {% endblock %}
