@@ -1,4 +1,61 @@
-/* Placeholder CSS file */
+/* Base styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  @apply bg-gradient-to-br from-gray-50 to-gray-100;
+}
+
+/* Form elements */
+.input-hover {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.input-hover:hover {
+  @apply shadow-sm;
+}
+
+.input-focus {
+  @apply focus:ring-2 focus:ring-red-500 focus:border-red-500 ring-offset-1;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg font-medium text-white bg-gradient-to-br from-red-600 to-red-500 shadow-sm hover:from-red-700 hover:to-red-600 transition-all duration-200 hover:shadow-md;
+}
+
+.btn-secondary {
+  @apply px-6 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-150;
+}
+
+/* Card animations */
+.result-entrance {
+  animation: fadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom card styling */
+.parking-card {
+  @apply bg-white rounded-xl border-l-4 border-red-600 shadow-lg overflow-hidden;
+  background-image: linear-gradient(to bottom right, #fff 50%, rgba(245, 243, 255, 0.2));
+}
+
+.parking-card-header {
+  @apply bg-red-50 px-6 py-4 border-b border-red-100;
+}
+
+/* Cooldown animation */
+@keyframes pulse {
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Preview section */
+.preview-section {
+  @apply bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl backdrop-blur-sm;
 }
