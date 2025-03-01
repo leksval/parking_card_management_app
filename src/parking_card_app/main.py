@@ -5,6 +5,10 @@ from app.card_generator import ParkingCardGenerator
 
 app = FastAPI()
 
+@app.get("/")
+async def root():
+    return {"message": "Parking Management System API"}
+
 @app.post("/generate-card")
 async def generate_card(user_data: dict):
     InputValidator.validate_user_data(user_data)
