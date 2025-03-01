@@ -21,11 +21,6 @@
         </div>
         
         <div>
-            <label for="contact" class="block text-sm font-medium text-gray-700">Contact Number</label>
-            <input type="text" id="contact" name="contact" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
-        </div>
-        
-        <div>
             <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                 Generate Card
             </button>
@@ -66,8 +61,7 @@
         const formData = {
             name: document.getElementById('name').value,
             email: document.getElementById('email').value,
-            vehicle_reg: document.getElementById('vehicle_reg').value,
-            contact: document.getElementById('contact').value
+            vehicle_reg: document.getElementById('vehicle_reg').value
         };
         
         try {
