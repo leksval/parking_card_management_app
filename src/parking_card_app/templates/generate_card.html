@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
+    <h1 class="text-2xl font-bold text-red-600 mb-6">Generate Parking Card</h1>
+    
+    <form id="cardForm" class="space-y-4">
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input type="text" id="name" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
+        </div>
+        
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+            <input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
+        </div>
+        
+        <div>
+            <label for="vehicle_reg" class="block text-sm font-medium text-gray-700">Vehicle Registration</label>
+            <input type="text" id="vehicle_reg" name="vehicle_reg" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
+        </div>
+        
+        <div>
+            <label for="contact" class="block text-sm font-medium text-gray-700">Contact Number</label>
+            <input type="text" id="contact" name="contact" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500">
+        </div>
+        
+        <div>
+            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                Generate Card
+            </button>
+        </div>
+    </form>
+
+    <div id="result" class="mt-8 hidden">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Your Parking Card</h2>
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-sm text-gray-500">Card ID</p>
+                    <p id="card_id" class="font-medium"></p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Vehicle Registration</p>
+                    <p id="card_vehicle_reg" class="font-medium"></p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Expiry Date</p>
+                    <p id="expiry" class="font-medium"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="error" class="mt-4 hidden">
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+            <p id="error_message"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('cardForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            vehicle_reg: document.getElementById('vehicle_reg').value,
+            contact: document.getElementById('contact').value
+        };
+        
+        try {
+            const response = await fetch('/generate-card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                document.getElementById('error').classList.add('hidden');
+                document.getElementById('card_id').textContent = result.card_id;
+                document.getElementById('card_vehicle_reg').textContent = result.vehicle_reg;
+                document.getElementById('expiry').textContent = result.expiry;
+                document.getElementById('result').classList.remove('hidden');
+            } else {
+                document.getElementById('result').classList.add('hidden');
+                document.getElementById('error_message').textContent = result.detail || result.error || 'An error occurred';
+                document.getElementById('error').classList.remove('hidden');
+            }
+        } catch (error) {
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('error_message').textContent = 'Network error. Please try again.';
+            document.getElementById('error').classList.remove('hidden');
+        }
+    });
+</script>
+{% endblock %}
