@@ -6,7 +6,7 @@ from app.card_generator import ParkingCardGenerator
 app = FastAPI()
 
 @app.post("/generate-card")
-async def generate_card(user_ dict):
+async def generate_card(user_data: dict):
     InputValidator.validate_user_data(user_data)
     if not DataVerifier().verify_completion(user_data):
         return {"error": "Incomplete user data"}
