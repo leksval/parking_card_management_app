@@ -31,7 +31,7 @@
         
         <div>
             <button type="submit" class="btn-primary w-full bg-red-600 hover:bg-red-700 text-white rounded-xl px-8 py-4">
-                Generate Preview
+                Preview Card
             </button>
         </div>
     </form>
@@ -112,7 +112,7 @@
     </div>
 
     <div id="cooldownNotice" class="hidden mt-4 text-sm text-gray-600">
-        ⏳
+        <!-- Empty div now -->
     </div>
 
     <div id="error" class="mt-4 hidden animate-pulse-slow">
@@ -176,17 +176,11 @@
         document.getElementById('cardForm').querySelectorAll('input, button').forEach(el => el.disabled = true);
         document.getElementById('cooldownNotice').classList.remove('hidden');
         
-        let seconds = 300;
-        const cooldownInterval = setInterval(() => {
-            document.getElementById('cooldownTimer').textContent = ` (${Math.floor(seconds / 60)}m ${seconds % 60}s remaining)`;
-            if (seconds <= 0) {
-                clearInterval(cooldownInterval);
-                document.getElementById('cardForm').style.opacity = '';
-                document.getElementById('cardForm').querySelectorAll('input, button').forEach(el => el.disabled = false);
-                document.getElementById('cooldownNotice').classList.add('hidden');
-            }
-            seconds--;
-        }, 1000);
+        setTimeout(() => {
+            document.getElementById('cardForm').style.opacity = '';
+            document.getElementById('cardForm').querySelectorAll('input, button').forEach(el => el.disabled = false);
+            document.getElementById('cooldownNotice').classList.add('hidden');
+        }, 300000); // 5 minutes = 300,000ms
     }
 
     // Add input validation on form submit
