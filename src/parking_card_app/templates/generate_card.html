@@ -39,42 +39,52 @@
         </div>
     </form>
 
-    <div id="result" class="mt-8 hidden parking-card result-entrance">
-        <div class="parking-card-header">
-            <h2 class="text-xl font-bold text-gray-800">
-                <svg class="w-5 h-5 inline mr-2 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 2a1 1 0 011 1v1h1a1 1 0 110 2H9.236a1 1 0 01-.894-.553l-1.448-2.895A1 1 0 016.382 0H5a1 1 0 000 2h1.382l1.724 3.447A1 1 0 009 6h4a1 1 0 100-2h-1V3a1 1 0 00-1-1z"/>
-                </svg>
-                Parking Permit
-            </h2>
-        </div>
-        <div class="p-6 grid grid-cols-2 gap-4">
-            <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4m0 2v2m0-2h4m-4 0H5"/>
-                </svg>
-                <div>
-                    <p class="text-sm text-gray-500">Card ID</p>
-                    <p id="card_id" class="font-medium"></p>
+    <div id="result" class="mt-8 hidden result-entrance">
+        <div class="bg-white rounded-lg shadow-xl border-2 border-red-100 overflow-hidden">
+            <div class="bg-red-600 text-white px-6 py-4">
+                <h2 class="text-xl font-bold flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a1 1 0 011 1v1h1a1 1 0 110 2H9.236a1 1 0 01-.894-.553l-1.448-2.895A1 1 0 016.382 0H5a1 1 0 000 2h1.382l1.724 3.447A1 1 0 009 6h4a1 1 0 100-2h-1V3a1 1 0 00-1-1z"/>
+                    </svg>
+                    Official Parking Permit
+                </h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center border-b border-gray-100 pb-3">
+                    <svg class="w-5 h-5 mr-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-500">Card ID</p>
+                        <p id="card_id" class="font-mono text-gray-900"></p>
+                    </div>
+                </div>
+                <div class="flex items-center border-b border-gray-100 pb-3">
+                    <svg class="w-5 h-5 mr-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-500">Vehicle Registration</p>
+                        <p id="card_vehicle_reg" class="font-mono text-gray-900"></p>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-500">Expiry Date</p>
+                        <p id="expiry" class="font-mono text-gray-900"></p>
+                    </div>
                 </div>
             </div>
-            <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/>
-                </svg>
-                <div>
-                    <p class="text-sm text-gray-500">Vehicle Registration</p>
-                    <p id="card_vehicle_reg" class="font-medium"></p>
-                </div>
-            </div>
-            <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-                <div>
-                    <p class="text-sm text-gray-500">Expiry Date</p>
-                    <p id="expiry" class="font-medium"></p>
-                </div>
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                <p class="text-xs text-gray-500 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Valid until: <span id="expiry" class="font-medium ml-1"></span>
+                </p>
             </div>
         </div>
     </div>
