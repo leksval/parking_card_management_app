@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8 border-2 border-gray-100">
     <h1 class="text-2xl font-bold text-red-600 mb-6">Generate Parking Card</h1>
     
     <form id="cardForm" class="space-y-6">
@@ -79,13 +79,13 @@
         </div>
     </div>
 
-    <div id="previewSection" class="hidden mt-8 parking-card preview-section">
-        <div class="parking-card-header">
-            <h3 class="text-lg font-semibold flex items-center space-x-2">
-                <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 2a1 1 0 011 1v1h1a1 1 0 110 2H9.236a1 1 0 01-.894-.553l-1.448-2.895A1 1 0 016.382 0H5a1 1 0 000 2h1.382l1.724 3.447A1 1 0 009 6h4a1 1 0 100-2h-1V3a1 1 0 00-1-1zm-3 9a1 1 0 012 0v3a1 1 0 11-2 0v-3zm3-1a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1z" clip-rule="evenodd"/>
+    <div id="previewSection" class="hidden mt-8 bg-white rounded-lg border-2 border-red-100 shadow-sm">
+        <div class="bg-red-50 px-6 py-4 border-b border-red-100">
+            <h3 class="text-lg font-semibold flex items-center text-red-700">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 2a1 1 0 011 1v1h1a1 1 0 110 2H9.236a1 1 0 01-.894-.553l-1.448-2.895A1 1 0 016.382 0H5a1 1 0 000 2h1.382l1.724 3.447A1 1 0 009 6h4a1 1 0 100-2h-1V3a1 1 0 00-1-1zm-3 9a1 1 0 012 0v3a1 1 0 11-2 0v-3zm3-1a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1z"/>
                 </svg>
-                <span>Confirm Details</span>
+                Confirm Details
             </h3>
         </div>
         <div class="p-6">
