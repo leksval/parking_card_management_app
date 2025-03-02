@@ -6,7 +6,6 @@ A modern parking permit management system with automated card generation and use
 
 ## Features ✨
 - **Secure Data Validation** - Strict input validation for user information
-- **Rate Limiting** - 5-minute cooldown period between submissions
 - **Preview System** - Confirm details before final submission
 - **Docker Support** - Easy containerized deployment
 - **Responsive UI** - Clean, modern interface with Tailwind CSS
