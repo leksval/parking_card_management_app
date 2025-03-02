@@ -10,7 +10,6 @@ A modern parking permit management system with automated card generation and use
 - **Preview System** - Confirm details before final submission
 - **Docker Support** - Easy containerized deployment
 - **Responsive UI** - Clean, modern interface with Tailwind CSS
-- **PDF Generation** - Automated parking permit creation (placeholder)
 
 ## Installation ⚙️
 
