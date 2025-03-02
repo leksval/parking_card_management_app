@@ -5,46 +5,72 @@
     <h1 class="text-2xl font-bold text-red-600 mb-6">Generate Parking Card</h1>
     
     <form id="cardForm" class="space-y-6">
-        <div>
+        <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
             <input type="text" id="name" name="name" required
                 class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all input-hover">
+            <p class="mt-1 text-xs text-gray-500">Enter your full legal name</p>
             <p class="text-red-500 text-sm mt-1 hidden error-message" id="nameError">Please enter a valid name</p>
         </div>
         
-        <div>
+        <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
             <input type="email" id="email" name="email" required
                 class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all input-hover">
+            <p class="mt-1 text-xs text-gray-500">We'll send your permit to this email</p>
             <p class="text-red-500 text-sm mt-1 hidden error-message" id="emailError">Please enter a valid email address</p>
         </div>
         
-        <div>
+        <div class="mb-4">
             <label for="vehicle_reg" class="block text-sm font-medium text-gray-700 mb-2">Vehicle Registration</label>
             <input type="text" id="vehicle_reg" name="vehicle_reg" required
                 class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all input-hover">
+            <p class="mt-1 text-xs text-gray-500">License plate number (5-8 alphanumeric characters)</p>
             <p class="text-red-500 text-sm mt-1 hidden error-message" id="vehicleError">5-8 alphanumeric characters</p>
         </div>
         
         <div>
-            <button type="submit" class="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 w-full transition-all">
-                Generate Card
+            <button type="submit" class="btn-primary w-full">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Generate Preview
             </button>
         </div>
     </form>
 
-    <div id="result" class="mt-8 hidden">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">Your Parking Card</h2>
-        <div class="bg-white border border-gray-200 rounded-lg p-6">
-            <div class="grid grid-cols-2 gap-4">
+    <div id="result" class="mt-8 hidden parking-card result-entrance">
+        <div class="parking-card-header">
+            <h2 class="text-xl font-bold text-gray-800">
+                <svg class="w-5 h-5 inline mr-2 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 2a1 1 0 011 1v1h1a1 1 0 110 2H9.236a1 1 0 01-.894-.553l-1.448-2.895A1 1 0 016.382 0H5a1 1 0 000 2h1.382l1.724 3.447A1 1 0 009 6h4a1 1 0 100-2h-1V3a1 1 0 00-1-1z"/>
+                </svg>
+                Parking Permit
+            </h2>
+        </div>
+        <div class="p-6 grid grid-cols-2 gap-4">
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4m0 2v2m0-2h4m-4 0H5"/>
+                </svg>
                 <div>
                     <p class="text-sm text-gray-500">Card ID</p>
                     <p id="card_id" class="font-medium"></p>
                 </div>
+            </div>
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/>
+                </svg>
                 <div>
                     <p class="text-sm text-gray-500">Vehicle Registration</p>
                     <p id="card_vehicle_reg" class="font-medium"></p>
                 </div>
+            </div>
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
                 <div>
                     <p class="text-sm text-gray-500">Expiry Date</p>
                     <p id="expiry" class="font-medium"></p>
@@ -70,14 +96,14 @@
             </div>
             <div class="flex space-x-4 mt-6">
                 <button 
-                    id="confirmBtn" 
-                    onclick="confirmGeneration()"
+                    id="submitBtn" 
+                    onclick="submitCard()"
                     class="btn-primary flex items-center justify-center flex-1"
                 >
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
-                    Generate Parking Permit
+                    Submit Card
                 </button>
                 <button 
                     onclick="document.getElementById('previewSection').classList.add('hidden')"
@@ -121,12 +147,11 @@
         document.getElementById('result').classList.add('hidden');
         document.getElementById('error_message').textContent = message || 'An error occurred';
         document.getElementById('error').classList.remove('hidden');
-        document.getElementById('confirmBtn').disabled = false;
     }
 
-    async function confirmGeneration() {
+    async function submitCard() {
         try {
-            document.getElementById('confirmBtn').disabled = true;
+            document.getElementById('submitBtn').disabled = true;
             const response = await fetch('/generate-card', {
                 method: 'POST',
                 headers: {
@@ -142,9 +167,11 @@
                 startCooldown();
             } else {
                 showError(result.detail || result.error);
+                document.getElementById('submitBtn').disabled = false;
             }
         } catch (error) {
             showError('Network error. Please try again.');
+            document.getElementById('submitBtn').disabled = false;
         }
     }
 
