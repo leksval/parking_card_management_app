@@ -1,9 +1,10 @@
 from fastapi import HTTPException
 import re
+from app.data_verifier import DataVerifier
 
 class InputValidator:
     @staticmethod
-    def validate_user_data(data):
+    async def validate_user_data(data):
         required = ['name', 'email', 'vehicle_reg']
         if not all(field in data for field in required):
             raise HTTPException(status_code=400, detail="Missing required fields")
@@ -21,6 +22,11 @@ class InputValidator:
 
         if not re.match(r'^[A-Z0-9]{5,8}$', vehicle_reg):
             raise HTTPException(status_code=400, detail="Vehicle registration must be 5-8 alphanumeric characters")
+        
+        # Add new database check
+        verifier = DataVerifier()
+        if await verifier.check_existing_registration(vehicle_reg):
+            raise HTTPException(status_code=400, detail="Vehicle already registered to another user")
         
         # Update data with cleaned values
         data.update({

@@ -6,11 +6,29 @@ from app.data_verifier import DataVerifier
 from app.card_generator import ParkingCardGenerator
 from datetime import datetime, timedelta
 import hashlib
+from databases import Database
+from sqlalchemy import create_engine
+from app.models import Base, User, ParkingCard
+
+DATABASE_URL = "sqlite+aiosqlite:///./parking.db"
+database = Database(DATABASE_URL)
+
+# Create tables
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 cooldown_cache = {}
+
+@app.on_event("startup")
+async def startup():
+    await database.connect()
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
 
 def get_data_hash(user_data: dict):
     data_str = f"{user_data['name']}{user_data['email']}{user_data['vehicle_reg']}"
