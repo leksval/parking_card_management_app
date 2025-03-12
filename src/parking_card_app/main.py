@@ -6,15 +6,17 @@ from app.data_verifier import DataVerifier
 from app.card_generator import ParkingCardGenerator
 from datetime import datetime, timedelta
 import hashlib
+import os
 from databases import Database
 from sqlalchemy import create_engine
 from app.models import Base, User, ParkingCard
 
-DATABASE_URL = "sqlite+aiosqlite:///./parking.db"
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./parking.db")
 database = Database(DATABASE_URL)
 
-# Create tables
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# Create sync engine for table creation
+sync_db_url = DATABASE_URL.replace("+aiosqlite", "")  # Convert to sync SQLAlchemy URL
+engine = create_engine(sync_db_url, connect_args={"check_same_thread": False})
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
