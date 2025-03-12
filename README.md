@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/75692bb9-ae5f-4254-9f56-88e442dc97b3
 
 ### Prerequisites
 - Python 3.9+
-- Docker (optional)
+- Docker
 
 ### Quick Start with Docker
 ```bash
