@@ -28,6 +28,11 @@ class InputValidator:
         if await verifier.check_existing_registration(vehicle_reg):
             raise HTTPException(status_code=400, detail="Vehicle already registered to another user")
         
+        # Add email existence check
+        if await verifier.check_existing_email(email):
+            if await verifier.check_vehicle_owner(email, vehicle_reg):
+                raise HTTPException(400, "Vehicle already registered to another email")
+        
         # Update data with cleaned values
         data.update({
             'name': name,
