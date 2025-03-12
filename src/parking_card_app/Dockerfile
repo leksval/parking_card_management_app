@@ -6,8 +6,9 @@ COPY app/ ./app/
 COPY templates/ ./templates/
 COPY static/ ./static/
 COPY main.py .
-ENV DATABASE_URL=sqlite+aiosqlite:///./parking.db
+ENV DATABASE_URL=sqlite+aiosqlite:////app/data/parking.db
 RUN apt-get update && apt-get install -y \
     sqlite3 \
     && rm -rf /var/lib/apt/lists/*
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+RUN mkdir -p /app/data
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
