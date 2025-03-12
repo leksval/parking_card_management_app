@@ -2,6 +2,8 @@ fastapi
 uvicorn
 python-dotenv
 pytest
+pytest-asyncio
+httpx
 jinja2
 sqlalchemy>=1.4
 databases[aiosqlite]
