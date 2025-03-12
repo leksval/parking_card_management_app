@@ -1,7 +1,4 @@
 # Parking Management System API 
-
-![parking-card-example](https://via.placeholder.com/400x200.png?text=Parking+Card+Preview)
-
 A modern parking permit management system with automated card generation and user validation.
 
 ## Features ✨
@@ -9,6 +6,8 @@ A modern parking permit management system with automated card generation and use
 - **Preview System** - Confirm details before final submission
 - **Docker Support** - Easy containerized deployment
 - **Responsive UI** - Clean, modern interface with Tailwind CSS
+
+https://github.com/user-attachments/assets/75692bb9-ae5f-4254-9f56-88e442dc97b3
 
 ## Installation ⚙️
 
