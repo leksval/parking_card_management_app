@@ -1,4 +1,4 @@
-# Parking Management System API 
+# Parking Card Management System
 A modern parking permit management system with automated card generation and user validation.
 
 ## Features ✨
@@ -15,6 +15,10 @@ A modern parking permit management system with automated card generation and use
 - **Transaction Safety** - Atomic database operations
 - **Audit Trail** - Full card generation history
 
+
+https://github.com/user-attachments/assets/f05a382d-ce03-4c4f-9ac4-fc593caaa588
+
+
 ## Installation ⚙️
  
 
@@ -25,7 +29,7 @@ A modern parking permit management system with automated card generation and use
 ### Quick Start with Docker
 ```bash
 # Build and run
-docker build -t parking-app . && docker run -p 8000:8000 parking-app
+docker build -t parking-app -f src/parking_card_app/Dockerfile . && docker run -p 8000:8000 parking-app
 
 # Access the app
 open http://localhost:8000
@@ -71,7 +75,7 @@ POST /check-registration
 **Success Response:**
 ```json
 {
-    "card_id": "550e8400-e29b-41d4-a716-446655440000",
+    "card_id": "5AB42G",
     "vehicle_reg": "ABC123", 
     "expiry": "2025-03-20"
 }
@@ -136,13 +140,6 @@ parking_card_app/
 ├── main.py                # Entry point
 └── requirements.txt
 ```
-
-## Development 🤝
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/new-validator`
-3. Commit changes: `git commit -m 'Add validation pattern'`
-4. Push branch: `git push origin feature/new-validator`
-5. Open pull request
 
 ### Development Setup
 ```bash
