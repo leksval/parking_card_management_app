@@ -26,6 +26,9 @@ class DatabaseHandler:
                             detail="Vehicle already registered to another user"
                         )
                     user.vehicle_reg = user_data['vehicle_reg']
+                else:
+                    # Allow renewals without changing vehicle_reg
+                    pass  # No action needed for same vehicle registration
             else:
                 # Create new user if doesn't exist
                 user = User(

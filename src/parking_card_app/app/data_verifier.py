@@ -25,3 +25,12 @@ class DataVerifier:
             (User.vehicle_reg != vehicle_reg)
         )
         return await database.fetch_one(query) is not None
+        
+    async def is_vehicle_owned_by_another_user(self, vehicle_reg: str, email: str):
+        from main import database
+        from app.models import User
+        query = User.__table__.select().where(
+            (User.vehicle_reg == vehicle_reg) &
+            (User.email != email)
+        )
+        return await database.fetch_one(query) is not None

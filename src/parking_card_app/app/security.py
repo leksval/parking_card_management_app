@@ -25,7 +25,7 @@ class InputValidator:
         
         # Add new database check
         verifier = DataVerifier()
-        if await verifier.check_existing_registration(vehicle_reg):
+        if await verifier.is_vehicle_owned_by_another_user(vehicle_reg, email):
             raise HTTPException(status_code=400, detail="Vehicle already registered to another user")
         
         # Add email existence check
