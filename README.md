@@ -5,6 +5,7 @@ A modern parking permit management system with automated card generation and use
 - **Multi-Card Support** - Generate multiple permits for same vehicle
 - **Ownership Verification** - Strict vehicle registration checks
 - **Renewal System** - Generate new cards with updated expiration
+- **Expiration Notifications** - Automated email reminders for expiring cards
 - **Validation Pipeline**:
   - Input sanitization
   - Email format validation (RFC 5322)
@@ -93,8 +94,8 @@ Create `.env` file:
 # Production
 SMTP_SERVER=smtp.example.com
 SMTP_PORT=587
-SMTP_USER=admin@parking.com
-SMTP_PASS=securepassword
+SMTP_USER=your_email@example.com
+SMTP_PASS=your_email_password
 
 # Development
 DEBUG=true
@@ -121,6 +122,9 @@ parking_card_app/
 │   ├── database.py       # Atomic transaction handler
 │   ├── security.py       # Validation pipeline
 │   └── models.py         # Database schema definitions
+├── scripts/
+│   ├── expiration_check.py # Card expiration checker
+│   └── start.sh           # Container startup script
 ├── static/
 │   └── css/style.css     # Animation/UI enhancements
 ├── templates/             # UI components

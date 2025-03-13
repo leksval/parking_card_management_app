@@ -9,6 +9,10 @@ COPY main.py .
 ENV DATABASE_URL=sqlite+aiosqlite:////app/data/parking.db
 RUN apt-get update && apt-get install -y \
     sqlite3 \
+    cron \
     && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /app/data
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
+RUN mkdir -p /app/scripts
+COPY scripts/ /app/scripts/
+RUN chmod +x /app/scripts/start.sh
+CMD ["/app/scripts/start.sh"]
