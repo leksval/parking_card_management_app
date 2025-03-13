@@ -4,10 +4,15 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app/ ./app/
+# Copy the entire package structure
+COPY app/ ./parking_card_app/app/
 COPY static/ ./static/
 COPY templates/ ./templates/
 COPY tests/ ./tests/
-COPY main.py .
+COPY main.py ./parking_card_app/main.py
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+# Install as editable package
+COPY setup.py .
+RUN pip install -e .
+
+CMD ["uvicorn", "parking_card_app.app.main:app", "--host", "0.0.0.0", "--port", "80"]
