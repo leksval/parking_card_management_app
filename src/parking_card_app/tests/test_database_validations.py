@@ -6,6 +6,8 @@ from app.data_verifier import DataVerifier
 from app.security import InputValidator
 from databases import Database
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+from app.database import DatabaseHandler
 
 @pytest.fixture(scope="module")
 def test_db():
@@ -127,3 +129,58 @@ async def test_multiple_cards_per_user(test_db):
     
     assert len(cards) == 2
     await test_db.disconnect()
+
+def test_card_history_storage(test_db):
+    engine = create_engine("sqlite:///:memory:")
+    handler = DatabaseHandler(engine)
+    db = Session(engine)
+    
+    user_data = {
+        "name": "History Test",
+        "email": "history@test.com",
+        "vehicle_reg": "HISTORY1"
+    }
+    card_data = {
+        "card_id": "TESTCARD",
+        "expiry": "2024-12-31",
+        "vehicle_reg": "HISTORY1"
+    }
+    
+    user, card = handler.create_user_and_card(db, user_data, card_data)
+    
+    assert user.id is not None
+    assert card.id is not None
+    assert card.created_at is not None
+    assert card.user_id == user.id
+    assert card.expiry_date.year == 2024
+
+def test_multiple_card_generation(test_db):
+    engine = create_engine("sqlite:///:memory:")
+    handler = DatabaseHandler(engine)
+    db = Session(engine)
+    
+    user_data = {
+        "name": "Multi Card",
+        "email": "multi@card.com",
+        "vehicle_reg": "MULTICARD"
+    }
+    
+    # Generate first card
+    card1_data = {
+        "card_id": "CARD0001",
+        "expiry": "2024-01-01",
+        "vehicle_reg": "MULTICARD"
+    }
+    user1, card1 = handler.create_user_and_card(db, user_data, card1_data)
+    
+    # Generate second card
+    card2_data = {
+        "card_id": "CARD0002",
+        "expiry": "2025-01-01",
+        "vehicle_reg": "MULTICARD"
+    }
+    user2, card2 = handler.create_user_and_card(db, user_data, card2_data)
+    
+    assert user1.id == user2.id
+    assert len(user1.cards) == 2
+    assert {c.card_id for c in user1.cards} == {"CARD0001", "CARD0002"}

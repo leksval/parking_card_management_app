@@ -9,7 +9,9 @@ import hashlib
 import os
 from databases import Database
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from app.models import Base, User, ParkingCard
+from app.database import DatabaseHandler
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./parking.db")
 database = Database(DATABASE_URL)
@@ -17,12 +19,13 @@ database = Database(DATABASE_URL)
 # Create sync engine for table creation
 sync_db_url = DATABASE_URL.replace("+aiosqlite", "")  # Convert to sync SQLAlchemy URL
 engine = create_engine(sync_db_url, connect_args={"check_same_thread": False})
-Base.metadata.create_all(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 cooldown_cache = {}
+app.db_handler = DatabaseHandler(engine)
 
 @app.on_event("startup")
 async def startup():
@@ -42,7 +45,27 @@ async def root(request: Request):
 
 @app.post("/generate-card")
 async def generate_card(user_data: dict):
-    InputValidator.validate_user_data(user_data)
+    await InputValidator.validate_user_data(user_data)
     if not DataVerifier().verify_completion(user_data):
-        return {"error": "Incomplete user data"}
-    return ParkingCardGenerator().generate(user_data)
+        raise HTTPException(status_code=400, detail="Incomplete user data")
+    
+    db = SessionLocal()
+    try:
+        # Generate card data
+        generator = ParkingCardGenerator()
+        card_data = generator.generate(user_data)
+        
+        # Save to database
+        user, card = app.db_handler.create_user_and_card(db, user_data, card_data)
+        
+        return {
+            "card_id": card_data['card_id'],
+            "vehicle_reg": card_data['vehicle_reg'],
+            "expiry": card_data['expiry'],
+            "created_at": card.created_at.isoformat(),
+            "database_id": card.id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Database error") from e
+    finally:
+        db.close()
