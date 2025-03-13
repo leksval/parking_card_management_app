@@ -2,7 +2,7 @@
 A modern parking permit management system with automated card generation and user validation.
 
 ## Features ✨
-- **Multi-Card Support** - Generate multiple permits for same vehicle
+- **Multi-Card Support** - Generate multiple permits per vehicle/user
 - **Ownership Verification** - Strict vehicle registration checks
 - **Renewal System** - Generate new cards with updated expiration
 - **Expiration Notifications** - Automated email reminders for expiring cards
@@ -10,6 +10,7 @@ A modern parking permit management system with automated card generation and use
   - Input sanitization
   - Email format validation (RFC 5322)
   - Vehicle registration pattern matching
+  - SMTP email notifications
   - Database integrity checks
 - **Transaction Safety** - Atomic database operations
 - **Audit Trail** - Full card generation history
@@ -42,8 +43,9 @@ uvicorn main:app --reload
 
 ### Core Endpoints
 ### Generate Parking Permit
+`POST /generate-card` - Create new parking card with email confirmation
 ```http
-POST /generate-card
+POST /check-registration
 ```
 
 **Request Body:**
@@ -54,6 +56,17 @@ POST /generate-card
     "vehicle_reg": "ABC123"
 }
 ```
+
+**Response:**
+```json
+{
+    "exists": true,
+    "is_owner": false
+}
+```
+
+### Registration Check
+`POST /check-registration` - Verify vehicle ownership status
 
 **Success Response:**
 ```json
@@ -68,18 +81,6 @@ POST /generate-card
 - `400 Bad Request` - Invalid input data
 - `429 Too Many Requests` - Rate limit exceeded
 
-### Registration Check
-```http
-POST /check-registration
-```
-
-**Request Body:**
-```json
-{
-    "vehicle_reg": "ABC123",
-    "email": "user@example.com"
-}
-```
 
 **Example CURL:**
 ```bash
@@ -96,6 +97,7 @@ SMTP_SERVER=smtp.example.com
 SMTP_PORT=587
 SMTP_USER=your_email@example.com
 SMTP_PASS=your_email_password
+DATABASE_URL=sqlite+aiosqlite:////app/data/parking.db
 
 # Development
 DEBUG=true
@@ -103,9 +105,9 @@ DEBUG=true
 
 ## Architecture 🛠️
 | Component            | Technology           |
-|----------------------|----------------------|
+|----------------------|----------------------| 
 | Backend Framework    | FastAPI              |
-| Database ORM         | SQLAlchemy           |
+| Database             | SQLite + SQLAlchemy  |
 | Async Database       | Databases + aiosqlite|
 | Input Validation     | Regex + Custom Rules |
 | Testing              | pytest               |
@@ -121,6 +123,7 @@ parking_card_app/
 │   ├── data_verifier.py   # Cross-system data checks
 │   ├── database.py       # Atomic transaction handler
 │   ├── security.py       # Validation pipeline
+│   ├── card_generator.py # UUID-based ID generation
 │   └── models.py         # Database schema definitions
 ├── scripts/
 │   ├── expiration_check.py # Card expiration checker
