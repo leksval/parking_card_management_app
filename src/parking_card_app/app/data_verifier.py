@@ -1,4 +1,5 @@
 class DataVerifier:
+    """Central hub for data integrity checks across systems."""
     REQUIRED_FIELDS = ['name', 'email', 'vehicle_reg']
     
     def verify_completion(self, user_data):
@@ -27,10 +28,15 @@ class DataVerifier:
         return await database.fetch_one(query) is not None
         
     async def is_vehicle_owned_by_another_user(self, vehicle_reg: str, email: str):
+        """
+        Critical ownership check preventing vehicle hijacking.
+        Returns True if vehicle registered to different email.
+        """
         from main import database
         from app.models import User
+        # Uses direct SQLAlchemy core query for async efficiency
         query = User.__table__.select().where(
             (User.vehicle_reg == vehicle_reg) &
-            (User.email != email)
+            (User.email != email)  # Different owner check
         )
         return await database.fetch_one(query) is not None

@@ -9,7 +9,25 @@ class DatabaseHandler:
         Base.metadata.create_all(bind=self.engine)
         
     def create_user_and_card(self, db: Session, user_data: dict, card_data: dict):
-        """Atomically create/update user and card record"""
+        """
+        Atomic transaction handling user and card creation:
+        1. Checks for existing user by email
+        2. Validates vehicle registration ownership if updating
+        3. Creates new user record if none exists
+        4. Generates new parking card linked to user
+        5. Commits transaction or rolls back on failure
+        
+        Args:
+            db: Database session
+            user_data: Dict with name, email, vehicle_reg
+            card_data: Dict with card_id and expiry date
+            
+        Returns:
+            Tuple of (User, ParkingCard) objects
+            
+        Raises:
+            HTTPException: On vehicle registration conflicts
+        """
         try:
             # Check for existing user by email
             user = db.query(User).filter(User.email == user_data['email']).first()

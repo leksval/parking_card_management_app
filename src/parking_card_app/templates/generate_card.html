@@ -127,6 +127,9 @@
     let formSubmissionData = null;
     let cooldownTimeout = null;
 
+    /* ---------------------------
+       UI STATE MANAGEMENT
+       --------------------------- */
     function showSuccess(result) {
         document.getElementById('error').classList.add('hidden');
         document.getElementById('card_id').textContent = result.card_id;
@@ -143,6 +146,9 @@
         document.getElementById('error').classList.remove('hidden');
     }
 
+    /* ---------------------------
+       CARD GENERATION HANDLING
+       --------------------------- */
     async function submitCard() {
         try {
             document.getElementById('submitBtn').disabled = true;
@@ -181,7 +187,9 @@
         }, 300000); // 5 minutes = 300,000ms
     }
 
-    // Add input validation on form submit
+    /* ---------------------------
+       FORM VALIDATION & SUBMISSION
+       --------------------------- */
     document.getElementById('cardForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         

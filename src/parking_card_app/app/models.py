@@ -6,6 +6,12 @@ from datetime import datetime
 Base = declarative_base()
 
 class User(Base):
+    """Represents a parking system user with vehicle registration.
+    
+    Attributes:
+        cards: One-to-many relationship with ParkingCards
+        vehicle_reg: Unique identifier for registered vehicle
+    """
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
@@ -14,6 +20,12 @@ class User(Base):
     cards = relationship("ParkingCard", back_populates="user")
 
 class ParkingCard(Base):
+    """Digital parking permit with expiration tracking.
+    
+    Indexes:
+        ix_expiry_date: Optimize expiration queries
+        ix_vehicle_reg: Speed up registration lookups
+    """
     __tablename__ = "parking_cards"
     id = Column(Integer, primary_key=True, index=True)
     card_id = Column(String(8), unique=True, index=True, nullable=False)

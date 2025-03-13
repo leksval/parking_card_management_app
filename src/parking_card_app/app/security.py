@@ -5,6 +5,16 @@ from app.data_verifier import DataVerifier
 class InputValidator:
     @staticmethod
     async def validate_user_data(data):
+        """
+        Performs comprehensive input validation:
+        1. Checks for required fields
+        2. Validates email format using RFC 5322 pattern
+        3. Ensures vehicle registration matches agency format
+        4. Verifies vehicle ownership through database
+        
+        Raises:
+            HTTPException: For any validation failures
+        """
         required = ['name', 'email', 'vehicle_reg']
         if not all(field in data for field in required):
             raise HTTPException(status_code=400, detail="Missing required fields")
@@ -17,6 +27,7 @@ class InputValidator:
         if not name or len(name) < 2:
             raise HTTPException(status_code=400, detail="Name must be at least 2 characters")
             
+        # Regex explanation: Simplified RFC 5322 email pattern
         if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
             raise HTTPException(status_code=400, detail="Invalid email format")
 
