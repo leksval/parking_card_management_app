@@ -36,6 +36,21 @@
         </div>
     </form>
 
+    <div id="emailConfirmation" class="hidden mt-6 bg-green-50 border-l-4 border-green-600 p-4 rounded-lg">
+        <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <div>
+                <p class="text-green-800 font-medium">Confirmation sent to <span id="successEmail"></span></p>
+                <p class="text-green-700 text-sm mt-1">
+                    Card ID: <span id="successCardId" class="font-mono"></span> | 
+                    Expires: <span id="successExpiry" class="font-mono"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
     <div id="result" class="mt-8 hidden result-entrance">
         <div class="bg-white rounded-lg shadow-xl border-2 border-red-100 overflow-hidden">
             <div class="bg-red-600 text-white px-6 py-4">
@@ -131,6 +146,13 @@
        UI STATE MANAGEMENT
        --------------------------- */
     function showSuccess(result) {
+        // Add email confirmation message
+        document.getElementById('successEmail').textContent = result.email;
+        document.getElementById('successCardId').textContent = result.card_id;
+        document.getElementById('successExpiry').textContent = result.expiry;
+        document.getElementById('emailConfirmation').classList.remove('hidden');
+        
+        // Keep existing success display
         document.getElementById('error').classList.add('hidden');
         document.getElementById('card_id').textContent = result.card_id;
         document.getElementById('card_vehicle_reg').textContent = result.vehicle_reg;

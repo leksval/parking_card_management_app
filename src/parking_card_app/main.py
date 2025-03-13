@@ -12,6 +12,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.models import Base, User, ParkingCard
 from app.database import DatabaseHandler
+from email.mime.text import MIMEText
+import smtplib
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./parking.db")
 database = Database(DATABASE_URL)
@@ -75,13 +77,42 @@ async def generate_card(user_data: dict):
         # Save to database
         user, card = app.db_handler.create_user_and_card(db, user_data, card_data)
         
-        return {
+        # Prepare response data
+        response_data = {
             "card_id": card_data['card_id'],
             "vehicle_reg": card_data['vehicle_reg'],
             "expiry": card_data['expiry'],
             "created_at": card.created_at.isoformat(),
-            "database_id": card.id
+            "database_id": card.id,
+            "email": user_data['email']
         }
+        
+        # Send confirmation email
+        try:
+            # Send confirmation email
+            msg = MIMEText(
+                f"""New Parking Card Created Successfully!\n\n
+                Card ID: {card_data['card_id']}\n
+                Vehicle Registration: {card_data['vehicle_reg']}\n
+                Expiry Date: {card_data['expiry']}\n\n
+                This card will be valid until the expiry date shown above."""
+            )
+            msg['Subject'] = 'New Parking Card Generated'
+            msg['From'] = os.getenv("SMTP_USER", 'noreply@parkingsystem.com')
+            msg['To'] = user_data['email']
+            
+            with smtplib.SMTP(
+                os.getenv("SMTP_SERVER", "localhost"), 
+                int(os.getenv("SMTP_PORT", 587))
+            ) as server:
+                server.starttls()
+                server.login(os.getenv("SMTP_USER", ""), os.getenv("SMTP_PASS", ""))
+                server.send_message(msg)
+        except Exception as e:
+            print(f"Email notification failed: {str(e)}")
+            # Continue with card generation even if email fails
+            
+        return response_data
     except Exception as e:
         raise HTTPException(status_code=500, detail="Database error") from e
     finally:
