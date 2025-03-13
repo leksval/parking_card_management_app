@@ -43,6 +43,23 @@ def get_data_hash(user_data: dict):
 async def root(request: Request):
     return templates.TemplateResponse("generate_card.html", {"request": request})
 
+@app.post("/check-registration")
+async def check_registration(vehicle_data: dict):
+    db = SessionLocal()
+    try:
+        existing = db.query(User).filter(
+            User.vehicle_reg == vehicle_data['vehicle_reg']
+        ).first()
+        
+        if existing:
+            return {
+                "exists": True,
+                "is_owner": existing.email == vehicle_data.get('email', '')
+            }
+        return {"exists": False}
+    finally:
+        db.close()
+
 @app.post("/generate-card")
 async def generate_card(user_data: dict):
     await InputValidator.validate_user_data(user_data)

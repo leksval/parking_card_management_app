@@ -83,6 +83,12 @@
             </h3>
         </div>
         <div class="p-6">
+            <div id="renewalNotice" class="hidden mb-4 p-3 bg-yellow-50 text-yellow-700 rounded-lg">
+                <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-sm">Generating new card for existing vehicle registration</span>
+            </div>
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div><span class="font-medium">Name:</span> <span id="previewName"></span></div>
                 <div><span class="font-medium">Email:</span> <span id="previewEmail"></span></div>
@@ -97,15 +103,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
-                    Submit Card
-                </button>
-                <button 
-                    onclick="document.getElementById('previewSection').classList.add('hidden')"
-                    class="btn-primary flex-none bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-2.5 gap-x-2"
-                >
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
+                    Generate New Card
                 </button>
             </div>
         </div>
@@ -190,6 +188,7 @@
         // Clear previous errors
         document.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
         document.querySelectorAll('input').forEach(input => input.classList.remove('border-red-500'));
+        document.getElementById('renewalNotice').classList.add('hidden');
         
         // Validate fields
         const fields = {
@@ -227,6 +226,38 @@
         if (!isValid) {
             document.getElementById('error').classList.remove('hidden');
             document.getElementById('error_message').textContent = 'Please fix the errors in the form';
+            return;
+        }
+        
+        try {
+            const checkResponse = await fetch('/check-registration', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({vehicle_reg: fields.vehicle_reg, email: fields.email})
+            });
+            
+            const checkResult = await checkResponse.json();
+            
+            if (checkResult.exists) {
+                if (checkResult.is_owner) {
+                    document.getElementById('renewalNotice').classList.remove('hidden');
+                    document.getElementById('submitBtn').innerHTML = `
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Generate New Card
+                    `;
+                } else {
+                    document.getElementById('vehicleError').textContent = 'Vehicle already registered to another user';
+                    document.getElementById('vehicleError').classList.remove('hidden');
+                    document.getElementById('vehicle_reg').classList.add('border-red-500');
+                    document.getElementById('error').classList.remove('hidden');
+                    document.getElementById('error_message').textContent = 'Vehicle already registered to another user';
+                    return;
+                }
+            }
+        } catch (error) {
+            showError('Error verifying registration');
             return;
         }
         
