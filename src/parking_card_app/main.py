@@ -43,39 +43,27 @@ def get_data_hash(user_data: dict):
 async def root(request: Request):
     return templates.TemplateResponse("generate_card.html", {"request": request})
 
-@app.post("/preview-card")
-async def preview_card(user_data: dict):
+@app.post("/generate-card")
+async def generate_card(user_data: dict):
     await InputValidator.validate_user_data(user_data)
-    verifier = DataVerifier()
+    if not DataVerifier().verify_completion(user_data):
+        raise HTTPException(status_code=400, detail="Incomplete user data")
     
-    # Check for existing registrations
-    if await verifier.check_existing_email(user_data['email']):
-        raise HTTPException(400, "Email already registered")
-    if await verifier.check_existing_registration(user_data['vehicle_reg']):
-        raise HTTPException(400, "Vehicle already registered")
-
-    # Generate preview without saving
-    preview = ParkingCardGenerator().generate(user_data)
-    return {"preview": preview}
-
-@app.post("/confirm-card")
-async def confirm_card(user_data: dict, expiry_days: int = 365):
     db = SessionLocal()
     try:
-        # Final validation
-        await InputValidator.validate_user_data(user_data)
+        # Generate card data
+        generator = ParkingCardGenerator()
+        card_data = generator.generate(user_data)
         
-        # Generate with custom expiry
-        card_data = ParkingCardGenerator().generate(user_data, expiry_days)
-        
-        # Save to database (includes final duplicate checks)
+        # Save to database
         user, card = app.db_handler.create_user_and_card(db, user_data, card_data)
         
         return {
             "card_id": card_data['card_id'],
+            "vehicle_reg": card_data['vehicle_reg'],
             "expiry": card_data['expiry'],
             "created_at": card.created_at.isoformat(),
-            "final": True
+            "database_id": card.id
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail="Database error") from e
