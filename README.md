@@ -2,14 +2,19 @@
 A modern parking permit management system with automated card generation and user validation.
 
 ## Features ✨
-- **Secure Data Validation** - Strict input validation for user information
-- **Preview System** - Confirm details before final submission
-- **Docker Support** - Easy containerized deployment
-- **Responsive UI** - Clean, modern interface with Tailwind CSS
-
-https://github.com/user-attachments/assets/75692bb9-ae5f-4254-9f56-88e442dc97b3
+- **Multi-Card Support** - Generate multiple permits for same vehicle
+- **Ownership Verification** - Strict vehicle registration checks
+- **Renewal System** - Generate new cards with updated expiration
+- **Validation Pipeline**:
+  - Input sanitization
+  - Email format validation (RFC 5322)
+  - Vehicle registration pattern matching
+  - Database integrity checks
+- **Transaction Safety** - Atomic database operations
+- **Audit Trail** - Full card generation history
 
 ## Installation ⚙️
+ 
 
 ### Prerequisites
 - Python 3.9+
@@ -34,6 +39,7 @@ uvicorn main:app --reload
 
 ## API Reference 📚
 
+### Core Endpoints
 ### Generate Parking Permit
 ```http
 POST /generate-card
@@ -61,6 +67,19 @@ POST /generate-card
 - `400 Bad Request` - Invalid input data
 - `429 Too Many Requests` - Rate limit exceeded
 
+### Registration Check
+```http
+POST /check-registration
+```
+
+**Request Body:**
+```json
+{
+    "vehicle_reg": "ABC123",
+    "email": "user@example.com"
+}
+```
+
 **Example CURL:**
 ```bash
 curl -X POST "http://localhost:8000/generate-card" \
@@ -68,7 +87,7 @@ curl -X POST "http://localhost:8000/generate-card" \
      -d '{"name":"John","email":"john@test.com","vehicle_reg":"ABC123"}'
 ```
 
-## Configuration ⚙️
+## Environment Variables ⚙️
 Create `.env` file:
 ```ini
 # Production
@@ -81,15 +100,16 @@ SMTP_PASS=securepassword
 DEBUG=true
 ```
 
-## Tech Stack 🛠️
+## Architecture 🛠️
 | Component            | Technology           |
 |----------------------|----------------------|
 | Backend Framework    | FastAPI              |
-| Templating           | Jinja2               |
-| Styling              | Tailwind CSS         |
-| Containerization     | Docker               |
-| Validation           | Pydantic (implied)   |
+| Database ORM         | SQLAlchemy           |
+| Async Database       | Databases + aiosqlite|
+| Input Validation     | Regex + Custom Rules |
 | Testing              | pytest               |
+| Frontend             | Jinja2 Templates     |
+| Styling              | Tailwind CSS 3       |
 
 ### Project Structure
 ```
@@ -97,11 +117,12 @@ parking_card_app/
 ├── app/
 │   ├── __init__.py
 │   ├── card_generator.py  # Permit generation logic
-│   ├── data_verifier.py   # Data completeness checks
-│   ├── notifications.py   # Email reminders
-│   └── security.py        # Validation & sanitization
+│   ├── data_verifier.py   # Cross-system data checks
+│   ├── database.py       # Atomic transaction handler
+│   ├── security.py       # Validation pipeline
+│   └── models.py         # Database schema definitions
 ├── static/
-│   └── css/style.css      # Custom styles
+│   └── css/style.css     # Animation/UI enhancements
 ├── templates/             # UI components
 ├── tests/                 # Test cases
 ├── Dockerfile
@@ -109,7 +130,7 @@ parking_card_app/
 └── requirements.txt
 ```
 
-## Contributing 🤝
+## Development 🤝
 1. Fork the repository
 2. Create feature branch: `git checkout -b feature/new-validator`
 3. Commit changes: `git commit -m 'Add validation pattern'`
