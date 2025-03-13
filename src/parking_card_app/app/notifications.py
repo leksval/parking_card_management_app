@@ -1,7 +1,5 @@
 import smtplib
 from email.mime.text import MIMEText
-from .models import User
-from .database import DatabaseHandler
 
 class UserNotifier:
     def __init__(self, smtp_server='smtp.example.com', port=587):

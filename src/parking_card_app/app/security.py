@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 import re
-from .data_verifier import DataVerifier
+from app.data_verifier import DataVerifier
 
 class InputValidator:
     @staticmethod
